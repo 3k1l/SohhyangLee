@@ -1,11 +1,34 @@
 class Solution {
     public int solution(int n, int[] lost, int[] reserve) {
+        int[] all = new int[n];
+        for(int i : reserve){
+            all[i-1]++;
+        }
+        for(int i : lost){
+            all[i-1]--;
+        }
+        for(int i=0; i<all.length; i++){
+            if(all[i] < 0){
+                if(i != all.length-1 && all[i+1] > 0){
+                    all[i]++;
+                    all[i+1]--;
+                }
+                else if(i != 0 && all[i-1] > 0){
+                    all[i]++;
+                    all[i-1]--;
+                }
+            }
+        }
         int answer = 0;
+        for(int i=0; i<all.length;i++){
+            if(!(all[i]<0)){
+                answer++;
+            }
+        }
         return answer;
     }
 }
-//1. n을 전체 배열로
-//2. 이 중 lost를 제외한 나머지를 일단 answer에
-//3. lost 배열에서 reserve +1 -1 했을 때 값이 포함되어 있는 지 확인
-//4. 중복 주의!!
-//greedy... 어렵
+
+//for(int i : reserve ) == for(int i=0; i<reserve.length(); i++)
+//System.out.println(i); == System.out.println(reserve[i]);
+//int[] System = int new[n] -> {0, 0, 0, 0, ....}
