@@ -23,7 +23,6 @@ class Solution {
             if(strName[i].equals('A')){
               //넘기기?
             }
-
         }
         // 뒤로 가는 테스트 케이스 생각이 필요....
         // front_case 와 back_case 구해서 비교
