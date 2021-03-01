@@ -8,7 +8,13 @@ class Solution {
         cnt = 0;
         visit = new boolean[n+1];
 
-        dfs(0, computers);
+        for(int i=0; i<n ; i++){
+            if(visit[i] == false){
+                dfs(i, computers);
+                cnt++; //가지 않은 곳에서 dfs 하면 연결된 node들을 구할 수 있쥐
+                System.out.println("cnt : " + cnt);
+            }
+        }
 
         return cnt;
     }
@@ -19,7 +25,6 @@ class Solution {
             if(map[start][i] == 1 && !visit[i]){
                 System.out.println("start : "+ start + " i :" + i);
                 dfs(i, map);
-                cnt++; //간선의 수를 구해버린 것
             }
         }
     }
