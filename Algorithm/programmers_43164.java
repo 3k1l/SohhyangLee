@@ -1,79 +1,51 @@
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 class Solution {
-  static boolean[][] visited;
-  static ArrayList<String> cityList;
+    List<String> list = new ArrayList<>();
+    static String route = "";
+    static boolean[] visit;
 
-  public String[] solution(String[][] tickets) {
+    public String[] solution(String[][] tickets) {
+        for(int i=0; i<tickets.length; i++){
+            visit = new boolean[tickets.length];
+            String start = tickets[i][0];
+            String end = tickets[i][1];
 
-    visited = new boolean[tickets.length][tickets[0].length];
-    cityList = new ArrayList<>();
-
-    for(int i=0; i<tickets.length; i++){
-      for(int j=0; j<2; j++){
-        visited[i][j] = false;
-      }
-    }
-
-    for(int i=0; i<tickets.length; i++){
-      if(tickets[i][0].equals("ICN")){
-        if(checkMinimum("ICN", tickets)){
-          dfs(tickets[i][0], tickets[i][1], tickets);
+            if(start.equals("ICN")){
+                route = start + ",";
+                visit[i] = true;
+                dfs(tickets, end, 1);
+            }
         }
-      }
+        Collections.sort(list);
+        String[] answer = list.get(0).split(",");
+        return answer;
     }
 
-    String[] answer = new String[cityList.size()];
+    private void dfs(String[][] tickets, String end, int cnt){
+        route += end + ",";
 
-    for(int i=0; i<cityList.size(); i++){
-      answer[i] = cityList.get(i);
-    }
-
-    return answer;
-  }
-
-  public void dfs(String depart, String destination, String[][] tickets){
-    System.out.println("destination : " + destination);
-    for(int i=0; i<tickets.length; i++){
-      if(destination.equals(tickets[i][0]) && !visited[i][0]){
-        if(checkRedundantStatus(tickets[i][0], tickets)){
-          visited[i][0] = true;
-          cityList.add(destination);
-          dfs(tickets[i][0], tickets[i][1], tickets);
+        if(cnt == tickets.length){ //모든 티켓을 사용하게 되는 경우 return
+            list.add(route);
+            System.out.println("route : " + route);
+            return;
         }
-        else{
-          if(checkMinimum(tickets[i][0], tickets)){
-            visited[i][0] = true;
-            cityList.add(destination);
-            dfs(tickets[i][0], tickets[i][1], tickets);
-          }
+
+        for(int i=0; i<tickets.length; i++){
+            String s = tickets[i][0];
+            String e = tickets[i][1];
+
+            if(s.equals(end) && !visit[i]){
+                visit[i] = true;
+                dfs(tickets, e, cnt+1);
+                System.out.println("route - : " + route);
+                visit[i] = false; //여러 경로 구하기 위해서 이렇게 해줌
+                //return 이 되어서 여기로 왔다면 모든 경로를 간 것이 아니니, false를 해주고
+                //왔던 곳을 빼주었던 것!!
+                route = route.substring(0, route.length()-4);
+            }
         }
-      }
     }
-  }
-
-  public boolean checkRedundantStatus(String department, String[][] tickets){
-      int cnt = 0;
-    for(int i=0; i<tickets.length; i++){
-      if(department.equals(tickets[i][0])){
-          System.out.println("checkRedundant : " + tickets[i][0]);
-          cnt++;
-      }
-    }
-    return cnt > 1 ? false : true;
-  }
-
-
-  public boolean checkMinimum(String toBeDepartment, String[][] tickets){
-    System.out.println("toBeDepartment : " + toBeDepartment);
-    String mC = "";
-    for(int i=0; i<tickets.length; i++){
-      if(toBeDepartment.equals(tickets[i][0])){
-        if(toBeDepartment.compareTo(tickets[i][1]) < 0){
-          System.out.println("compare : tickets[i][1] : " + tickets[i][1]);
-          return true;
-        }
-      }
-    }
-    return false;
-  }
 }
